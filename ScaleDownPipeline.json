@@ -1,0 +1,40 @@
+{
+  "name": "ScaleDownPipeline",
+  "properties": {
+    "description": "Azure SQL DW Scale down",
+    "activities": [
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "spScaleDown",
+          "storedProcedureParameters": {}
+        },
+        "inputs": [
+          {
+            "name": "AzureFakeOutput"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "AzureFakeOutputFinal"
+          }
+        ],
+        "policy": {
+          "timeout": "01:00:00",
+          "concurrency": 1,
+          "retry": 3
+        },
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "StoredProcedureActivityTemplate"
+      }
+    ],
+    "start": "2017-03-01T00:00:00Z",
+    "end": "2017-03-02T00:00:00Z",
+    "isPaused": false,
+    "pipelineMode": "Scheduled"
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.Pipeline.json"
+}

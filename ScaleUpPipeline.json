@@ -1,0 +1,47 @@
+{
+  "name": "ScaleUpPipeline",
+  "properties": {
+    "description": "Pipeline to scale up sql dw",
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "SqlSource",
+            "sqlReaderQuery": "ALTER DATABASE <data_warehouse_name> MODIFY (service_objective = 'DW300'); WHILE  ( SELECT TOP 1  state_desc  FROM sys.dm_operation_status  WHERE  1=1 AND resource_type_desc = 'Database' AND major_resource_id = '<data_warehouse_name>' AND operation = 'ALTER DATABASE'  ORDER BY  start_time DESC ) = 'IN_PROGRESS' BEGIN RAISERROR('Scale operation in progress',0,0) WITH NOWAIT; WAITFOR DELAY '00:00:05'; END; SELECT 1"
+          },
+          "sink": {
+            "type": "SqlSink",
+            "writeBatchSize": 0,
+            "writeBatchTimeout": "00:00:00"
+          }
+        },
+        "inputs": [
+          {
+            "name": "MasterDbDataset"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "AzureFakeOutput"
+          }
+        ],
+        "policy": {
+          "timeout": "1.00:00:00",
+          "concurrency": 1,
+          "retry": 3
+        },
+        "scheduler": {
+          "frequency": "Day",
+          "interval": 1
+        },
+        "name": "CopyActivityTemplate"
+      }
+    ],
+    "start": "2017-03-01T00:00:00Z",
+    "end": "2017-03-02T00:00:00Z",
+    "isPaused": false,
+    "pipelineMode": "Scheduled"
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.Pipeline.json"
+}

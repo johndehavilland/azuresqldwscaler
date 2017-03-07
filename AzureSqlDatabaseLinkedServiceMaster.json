@@ -1,0 +1,11 @@
+{
+  "name": "AzureSqlDatabaseLinkedServiceMaster",
+  "properties": {
+    "description": "",
+    "type": "AzureSqlDatabase",
+    "typeProperties": {
+      "connectionString": "Data Source=tcp:<server_name>.database.windows.net,1433;Initial Catalog=master;Integrated Security=False;User ID=<user>@<server>;Password=<password>;Connect Timeout=30;Encrypt=True"
+    }
+  },
+  "$schema": "http://datafactories.schema.management.azure.com/schemas/2015-09-01/Microsoft.DataFactory.LinkedService.json"
+}
